@@ -22,9 +22,15 @@ jobs:
       - name: Install project
         run: python -m pip install -e ".[dev]"
       - name: Ruff
-        run: python -m ruff check src tests
+        run: python -m ruff check src tests examples scripts benchmarks
       - name: Pyright
         run: python -m pyright src
+      - name: Release metadata and documentation links
+        run: python scripts/check_release.py
+      - name: Coverage gate
+        run: python -m pytest --cov=toolpermit --cov-report=term --cov-fail-under=70 -q
+      - name: Policy benchmark smoke test
+        run: python benchmarks/benchmark_policy.py --iterations 100 --trials 1
 
   tests:
     name: ${{ matrix.os }} / Python ${{ matrix.python-version }}
@@ -65,4 +71,4 @@ jobs:
           python -m venv smoke-venv
           smoke-venv/bin/python -m pip install dist/*.whl
           smoke-venv/bin/toolpermit --version
-
+          smoke-venv/bin/python -c "from importlib.resources import files; assert files('toolpermit.web.static').joinpath('index.html').read_text()"

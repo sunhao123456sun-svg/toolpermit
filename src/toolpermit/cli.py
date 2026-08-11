@@ -413,3 +413,7 @@ def ui_command(
         _fail(str(error), ExitCode.CONFIGURATION)
     typer.echo(f"ToolPermit UI: http://{selected_host}:{selected_port}")
     run_ui(database or settings.database, host=selected_host, port=selected_port)
+
+
+if __name__ == "__main__":
+    app()

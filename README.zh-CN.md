@@ -1,10 +1,84 @@
 # ToolPermit 中文介绍
 
-ToolPermit 是一个面向 MCP 工具调用的本地优先权限策略与审批层。英文 README 和英文参考文档是权威版本，本文件提供中文功能概览。
+ToolPermit 是一个面向 MCP 工具调用的本地优先权限策略、一次性审批和脱敏审计层。它放在
+MCP Client 与本地 `stdio` Server 之间，可以观察工具调用、执行可解释的
+`allow / ask / deny` 规则、审批例外操作，并使用历史记录离线比较候选策略。
 
-> 开发状态：v0.1.0 正在实现中。Phase 1 协议与跨平台可行性门禁已经通过，生产包尚未发布。
+> 发布状态：v0.1.0 候选版本，尚未发布到 PyPI。正式发布前请从已检出的源码提交安装。
 
-首个版本只支持本机单用户和 MCP `stdio`。它能够记录并脱敏工具调用、执行可解释的 `allow / ask / deny` 策略、把审批绑定到准确请求，并离线回放策略变化。它不是操作系统沙箱，也无法保护绕过代理的调用。
+英文 [README.md](README.md) 和英文参考文档是项目契约的权威版本；本文件提供中文功能说明与
+快速上手。
 
-开发与测试命令请以 [README.md](README.md) 为准。
+## 核心功能
 
+- 严格、带版本的 YAML 策略；未知字段会报错，按从上到下首次匹配决定结果。
+- 审批与准确的请求、策略、会话和过期时间绑定，只能原子消费一次。
+- 凭证形态和敏感字段在进入 SQLite、页面和 JSONL 导出前不可逆脱敏。
+- 使用已脱敏的历史调用离线回放新策略，不启动 MCP Server，也不会执行真实工具。
+- 所有核心能力都可通过 CLI 使用；可选网页界面只监听本机回环地址，并实施
+  Host、Origin、CSRF、CSP 和 SameSite 防护。
+- 在 Ubuntu、macOS、Windows 和 Python 3.11–3.13 上持续测试。
+
+![使用虚构演示数据的 ToolPermit 本地审批页面](docs/assets/toolpermit-ui.jpg)
+
+## 十分钟快速上手
+
+需要 Python 3.11–3.13 和项目源码：
+
+```bash
+python -m venv .venv
+.venv/bin/python -m pip install -e .
+.venv/bin/toolpermit init
+```
+
+Windows PowerShell 请把 `.venv/bin/` 换成 `.venv\Scripts\`。
+
+先运行观察模式。演示 Server 只会写入你明确提供的可抛弃目录：
+
+```bash
+mkdir demo-workspace
+.venv/bin/python examples/demo_client.py \
+  --mode observe \
+  --demo-dir demo-workspace
+.venv/bin/toolpermit runs list
+```
+
+随后体验审批。下列命令会在写文件前等待：
+
+```bash
+.venv/bin/python examples/demo_client.py \
+  --mode enforce \
+  --policy toolpermit.yaml \
+  --demo-dir demo-workspace
+```
+
+在另一个终端查看并批准准确请求：
+
+```bash
+.venv/bin/toolpermit approvals list
+.venv/bin/toolpermit approvals approve APPROVAL_ID
+```
+
+也可以运行 `.venv/bin/toolpermit ui`，在 `http://127.0.0.1:8765` 使用本地审批页面。
+完整的策略建议、回放、导出和清理流程见英文 [Quickstart](docs/quickstart.md)。
+
+## 重要边界
+
+v0.1 只承诺本机单用户、MCP `stdio`、策略 schema v1 和审计 schema v1。ToolPermit
+**不是操作系统沙箱**，无法看到绕过代理的调用，不能撤销已经执行的操作，也不声称可以消除
+符号链接或 TOCTOU 等文件系统竞态。网页界面不支持远程绑定。
+
+在保护破坏性工具之前，请阅读英文 [安全模型](docs/security.md)、
+[隐私与数据生命周期](docs/privacy.md) 和 [已知限制](docs/limitations.md)。
+
+## 开发
+
+```bash
+.venv/bin/python -m pip install -e ".[dev]"
+.venv/bin/ruff check src tests examples scripts benchmarks
+.venv/bin/pyright
+.venv/bin/pytest --cov=toolpermit --cov-fail-under=70
+```
+
+项目采用 [Apache License 2.0](LICENSE)。问题反馈与贡献方式见
+[SUPPORT.md](SUPPORT.md) 和 [CONTRIBUTING.md](CONTRIBUTING.md)。

@@ -5,11 +5,12 @@ build-backend = "hatchling.build"
 [project]
 name = "toolpermit"
 version = "0.1.0"
-description = "Local-first permission policies and approvals for MCP tool calls"
+description = "Local-first permission policies, approvals, and redacted audit for MCP tool calls"
 readme = "README.md"
 requires-python = ">=3.11"
-license = { text = "Apache-2.0" }
+license = "Apache-2.0"
 authors = [{ name = "ToolPermit contributors" }]
+keywords = ["AI agents", "MCP", "permissions", "policy", "security"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Environment :: Console",
@@ -47,6 +48,8 @@ toolpermit = "toolpermit.cli:app"
 Homepage = "https://github.com/sunhao123456sun-svg/toolpermit"
 Repository = "https://github.com/sunhao123456sun-svg/toolpermit"
 Issues = "https://github.com/sunhao123456sun-svg/toolpermit/issues"
+Documentation = "https://github.com/sunhao123456sun-svg/toolpermit/tree/main/docs"
+Changelog = "https://github.com/sunhao123456sun-svg/toolpermit/blob/main/CHANGELOG.md"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/toolpermit"]
@@ -58,6 +61,15 @@ include = [
   "/README.md",
   "/README.zh-CN.md",
   "/LICENSE",
+  "/CHANGELOG.md",
+  "/SECURITY.md",
+  "/CONTRIBUTING.md",
+  "/CODE_OF_CONDUCT.md",
+  "/SUPPORT.md",
+  "/ROADMAP.md",
+  "/docs",
+  "/examples",
+  "/benchmarks",
   "/pyproject.toml",
 ]
 

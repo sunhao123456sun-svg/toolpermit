@@ -1,0 +1,13 @@
+version: 1
+default: deny
+rules:
+  - id: allow-contained-demo-read
+    action: allow
+    explanation: Reading from the explicitly contained demo is expected.
+    match:
+      tool: read_demo
+  - id: review-contained-demo-write
+    action: ask
+    explanation: Writes require exact one-time local approval.
+    match:
+      tool: write_demo
