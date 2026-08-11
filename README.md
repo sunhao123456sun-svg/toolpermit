@@ -9,8 +9,8 @@ ToolPermit is a local-first permission policy, one-time approval, and redacted a
 local MCP client and a `stdio` server to observe calls, enforce explainable `allow / ask / deny`
 rules, review exceptional actions, and replay recorded calls against a candidate policy.
 
-> Current release: [v0.1.0 on PyPI](https://pypi.org/project/toolpermit/0.1.0/), with a matching
-> [GitHub Release](https://github.com/sunhao123456sun-svg/toolpermit/releases/tag/v0.1.0).
+> Current release: [v0.1.1 on PyPI](https://pypi.org/project/toolpermit/0.1.1/), with a matching
+> [GitHub Release](https://github.com/sunhao123456sun-svg/toolpermit/releases/tag/v0.1.1).
 
 English is authoritative for project contracts. See [README.zh-CN.md](README.zh-CN.md) for the
 Chinese feature overview and quickstart.
@@ -39,6 +39,9 @@ codex plugin marketplace add sunhao123456sun-svg/toolpermit --ref main
 codex plugin add toolpermit@toolpermit
 ```
 
+For a reproducible installation of this release, replace `main` with `v0.1.1` in the first
+command.
+
 Start a new task, then ask:
 
 ```text
@@ -56,7 +59,8 @@ Requirements: Python 3.11–3.13. A local checkout is also needed for the contai
 
 ```bash
 python -m venv .venv
-.venv/bin/python -m pip install "toolpermit==0.1.0"
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install "toolpermit==0.1.1"
 .venv/bin/toolpermit init
 ```
 

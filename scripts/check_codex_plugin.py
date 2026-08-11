@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+import tomllib
 from pathlib import Path
 from typing import cast
 
@@ -57,8 +58,11 @@ def main() -> int:
     if missing:
         raise AssertionError("missing Codex distribution files: " + ", ".join(missing))
 
+    with (ROOT / "pyproject.toml").open("rb") as handle:
+        project_version = str(tomllib.load(handle)["project"]["version"])
+
     manifest = _load_json(MANIFEST)
-    if manifest.get("name") != "toolpermit" or manifest.get("version") != "0.1.0":
+    if manifest.get("name") != "toolpermit" or manifest.get("version") != project_version:
         raise AssertionError("plugin name/version mismatch")
     if manifest.get("skills") != "./skills/":
         raise AssertionError("plugin skills path mismatch")
@@ -115,6 +119,7 @@ def main() -> int:
     installation = (ROOT / "docs" / "codex-skill.md").read_text(encoding="utf-8")
     install_commands = (
         "codex plugin marketplace add sunhao123456sun-svg/toolpermit --ref main",
+        f"codex plugin marketplace add sunhao123456sun-svg/toolpermit --ref v{project_version}",
         "codex plugin add toolpermit@toolpermit",
     )
     for command in install_commands:

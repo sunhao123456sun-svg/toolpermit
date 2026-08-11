@@ -9,7 +9,8 @@ ToolPermit requires Python 3.11–3.13.
 
 ```bash
 python -m venv .venv
-.venv/bin/python -m pip install "toolpermit==0.1.0"
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install "toolpermit==0.1.1"
 .venv/bin/toolpermit --version
 .venv/bin/toolpermit init
 ```

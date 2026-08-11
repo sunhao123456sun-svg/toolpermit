@@ -1,6 +1,6 @@
 {
   "name": "toolpermit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Configure local MCP tool-call policy, approval, replay, and redacted audit workflows.",
   "author": {
     "name": "ToolPermit contributors",

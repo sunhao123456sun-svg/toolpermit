@@ -22,6 +22,14 @@ codex plugin marketplace add sunhao123456sun-svg/toolpermit --ref main
 codex plugin add toolpermit@toolpermit
 ```
 
+The `main` reference follows the latest reviewed repository state. To pin this release for a
+reproducible installation, use:
+
+```bash
+codex plugin marketplace add sunhao123456sun-svg/toolpermit --ref v0.1.1
+codex plugin add toolpermit@toolpermit
+```
+
 Start a new Codex task after installation so the Skill is discovered. Invoke it explicitly with a
 request such as:
 
@@ -60,6 +68,10 @@ codex plugin add toolpermit@toolpermit
 ```
 
 Start a new task after updating.
+
+If the marketplace was pinned to a release tag, remove it and add the desired newer tag before
+reinstalling. Release tags are intentionally immutable and do not advance when `marketplace
+upgrade` is run.
 
 ## Remove
 
