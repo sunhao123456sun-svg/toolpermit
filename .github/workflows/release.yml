@@ -38,9 +38,10 @@ jobs:
               raise SystemExit(f"tag {tag!r} does not match version {version!r}")
       - name: Verify source
         run: |
-          python -m ruff check src tests examples scripts benchmarks
+          python -m ruff check src tests examples scripts benchmarks plugins
           python -m pyright src
           python scripts/check_release.py
+          python scripts/check_codex_plugin.py
           python -m pytest --cov=toolpermit --cov-fail-under=70 -q
           python -m pip_audit --local --skip-editable
       - name: Build once

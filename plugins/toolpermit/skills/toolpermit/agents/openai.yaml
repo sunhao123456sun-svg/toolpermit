@@ -1,0 +1,4 @@
+interface:
+  display_name: "ToolPermit"
+  short_description: "Guard MCP tool calls with local policy"
+  default_prompt: "Use $toolpermit to install or configure ToolPermit and safely wrap an MCP stdio server."

@@ -22,11 +22,13 @@ jobs:
       - name: Install project
         run: python -m pip install -e ".[dev]"
       - name: Ruff
-        run: python -m ruff check src tests examples scripts benchmarks
+        run: python -m ruff check src tests examples scripts benchmarks plugins
       - name: Pyright
         run: python -m pyright src
       - name: Release metadata and documentation links
-        run: python scripts/check_release.py
+        run: |
+          python scripts/check_release.py
+          python scripts/check_codex_plugin.py
       - name: Coverage gate
         run: python -m pytest --cov=toolpermit --cov-report=term --cov-fail-under=70 -q
       - name: Policy benchmark smoke test

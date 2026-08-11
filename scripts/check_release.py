@@ -18,6 +18,7 @@ REQUIRED = (
     "SUPPORT.md",
     "ROADMAP.md",
     "docs/quickstart.md",
+    "docs/codex-skill.md",
     "docs/cli-reference.md",
     "docs/configuration.md",
     "docs/policy-reference.md",
@@ -29,6 +30,8 @@ REQUIRED = (
     "examples/demo_server.py",
     "benchmarks/benchmark_policy.py",
     "benchmarks/README.md",
+    "plugins/toolpermit/.codex-plugin/plugin.json",
+    "plugins/toolpermit/skills/toolpermit/SKILL.md",
 )
 
 

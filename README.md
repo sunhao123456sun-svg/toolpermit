@@ -9,8 +9,8 @@ ToolPermit is a local-first permission policy, one-time approval, and redacted a
 local MCP client and a `stdio` server to observe calls, enforce explainable `allow / ask / deny`
 rules, review exceptional actions, and replay recorded calls against a candidate policy.
 
-> Release status: v0.1.0 release candidate. The package is not on PyPI yet. Install from a
-> checked-out commit until the first release is published.
+> Current release: [v0.1.0 on PyPI](https://pypi.org/project/toolpermit/0.1.0/), with a matching
+> [GitHub Release](https://github.com/sunhao123456sun-svg/toolpermit/releases/tag/v0.1.0).
 
 English is authoritative for project contracts. See [README.zh-CN.md](README.zh-CN.md) for the
 Chinese feature overview and quickstart.
@@ -30,13 +30,33 @@ Chinese feature overview and quickstart.
 
 ![ToolPermit loopback approval UI with fictional contained-demo data](docs/assets/toolpermit-ui.jpg)
 
+## Codex Skill
+
+Install the ToolPermit Codex Skill from this GitHub repository with the built-in plugin manager:
+
+```bash
+codex plugin marketplace add sunhao123456sun-svg/toolpermit --ref main
+codex plugin add toolpermit@toolpermit
+```
+
+Start a new task, then ask:
+
+```text
+Use $toolpermit to install ToolPermit and safely wrap my local MCP stdio server in observe mode.
+```
+
+The Skill checks the environment, installs the compatible Python package when authorized, preserves
+existing files, shows MCP client changes before writing them, and keeps enforcement and exact
+approvals user-controlled. See the [Codex Skill installation and usage guide](docs/codex-skill.md)
+for updating, removal, trigger examples, and limitations.
+
 ## Ten-minute quickstart
 
-Requirements: Python 3.11–3.13 and a local checkout.
+Requirements: Python 3.11–3.13. A local checkout is also needed for the contained demo scripts.
 
 ```bash
 python -m venv .venv
-.venv/bin/python -m pip install -e .
+.venv/bin/python -m pip install "toolpermit==0.1.0"
 .venv/bin/toolpermit init
 ```
 
@@ -106,6 +126,7 @@ Read [Security](docs/security.md), [Privacy and data lifecycle](docs/privacy.md)
 ## Documentation
 
 - [Quickstart](docs/quickstart.md)
+- [Codex Skill](docs/codex-skill.md)
 - [CLI reference](docs/cli-reference.md)
 - [Configuration](docs/configuration.md)
 - [Policy reference](docs/policy-reference.md)
@@ -122,8 +143,9 @@ Read [Security](docs/security.md), [Privacy and data lifecycle](docs/privacy.md)
 ```bash
 python -m venv .venv
 .venv/bin/python -m pip install -e ".[dev]"
-.venv/bin/ruff check src tests examples scripts benchmarks
+.venv/bin/ruff check src tests examples scripts benchmarks plugins
 .venv/bin/pyright
+.venv/bin/python scripts/check_codex_plugin.py
 .venv/bin/pytest --cov=toolpermit --cov-fail-under=70
 ```
 
