@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>ToolPermit local approvals</title>
+    <link rel="stylesheet" href="/app.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header>
+      <p class="eyebrow">LOCAL MCP CONTROL PLANE</p>
+      <h1>ToolPermit</h1>
+      <p>Review pending tool calls and inspect redacted local audit records.</p>
+    </header>
+    <main id="main" tabindex="-1">
+      <section aria-labelledby="approval-heading">
+        <div class="section-heading">
+          <h2 id="approval-heading">Pending approvals</h2>
+          <button id="refresh" type="button" aria-label="Refresh pending approvals and runs">Refresh</button>
+        </div>
+        <p id="status" role="status" aria-live="polite">Loading local state…</p>
+        <div id="approvals" class="cards"></div>
+      </section>
+      <section aria-labelledby="runs-heading">
+        <h2 id="runs-heading">Recent runs</h2>
+        <div id="runs" class="cards"></div>
+      </section>
+      <section aria-labelledby="events-heading">
+        <h2 id="events-heading">Run events</h2>
+        <form id="filters" class="filters">
+          <label>Run <select id="run-filter" name="run" required></select></label>
+          <label>Decision <select id="decision-filter" name="decision">
+            <option value="">Any</option><option value="allow">Allow</option>
+            <option value="ask">Ask</option><option value="deny">Deny</option>
+          </select></label>
+          <label>Tool <input id="tool-filter" name="tool" autocomplete="off"></label>
+          <label>Session <input id="session-filter" name="session" autocomplete="off"></label>
+          <label>Rule <input id="rule-filter" name="rule" autocomplete="off"></label>
+          <button type="submit">Apply filters</button>
+        </form>
+        <div id="events" class="cards"></div>
+      </section>
+    </main>
+    <template id="empty-template"><p class="empty">Nothing to show.</p></template>
+    <script src="/app.js" defer></script>
+  </body>
+</html>
