@@ -1,14 +1,14 @@
 # Phase 1 Validation Report
 
-> Status: Pending hosted Windows gate  
-> Validation date: 2026-08-11  
-> Local platforms tested: macOS 14 arm64; Ubuntu 24.04 arm64 through Colima
+> Status: Passed
+> Validation date: 2026-08-11
+> Validated platforms: macOS 14 arm64 locally; Ubuntu 24.04 arm64 through Colima; GitHub-hosted Ubuntu, macOS, and Windows
 
 ## Chinese executive summary
 
-Phase 1 的核心技术假设已经在 macOS 和 Linux 实测通过：MCP `stdio` 透明代理、现代 2026 协议发现、旧版初始化兼容、Python 与 TypeScript 两个独立客户端、等待期间取消、审批摘要、SQLite 单次消费、重启恢复、脱敏落盘和静态 UI 资源打包均有可执行测试。
+Phase 1 的核心技术假设已在 macOS、Linux 和 Windows 实测通过：MCP `stdio` 透明代理、现代 2026 协议发现、旧版初始化兼容、Python 与 TypeScript 两个独立客户端、等待期间取消、审批摘要、SQLite 单次消费、重启恢复、脱敏落盘和静态 UI 资源打包均有可执行测试。
 
-当前阶段尚未正式通过，唯一剩余门槛是 Windows 托管环境实测。仓库已加入三系统 GitHub Actions 工作流；只有 Windows、Ubuntu、macOS 三个 Job 都成功后，本报告才能改为 `Passed` 并进入 Phase 2。由于当前没有远程仓库，不能把 Windows 推断结果写成已通过。
+GitHub Actions 三系统矩阵在提交 `12e8f578fff43d02ec90f4cabb7912140c4a9dfd` 上全部成功，因此 Windows 托管门槛已满足，Phase 1 正式通过，可以进入 Phase 2。
 
 ## Environment
 
@@ -27,10 +27,10 @@ The MCP Python SDK 2.0.0 stable line implements the 2026-07-28 protocol while re
 
 | Spike | Standard | Evidence | Result |
 |---|---|---|---|
-| S1 stdio mediation | Proxy initialize/discover, list, call, cancel, shutdown across target OSes | `test_stdio_proxy.py`; macOS and Linux pass; Windows workflow prepared | Pending Windows |
-| S2 pause/resume and clients | Two independent clients; waiting call does not block cancellation | MCP Python 2.0 modern/legacy paths; TypeScript SDK 1.30; cancellation test | Pass locally/Linux |
+| S1 stdio mediation | Proxy initialize/discover, list, call, cancel, shutdown across target OSes | `test_stdio_proxy.py`; macOS, Linux, and Windows pass | Pass |
+| S2 pause/resume and clients | Two independent clients; waiting call does not block cancellation | MCP Python 2.0 modern/legacy paths; TypeScript SDK 1.30; cancellation test | Pass |
 | S3 canonical digest | Stable mapping; every security field bound; invalid numbers rejected | Hypothesis and golden tests in `test_canonical.py` | Pass |
-| S4 SQLite lifecycle | Atomic single consumption and safe restart behavior | 32-worker race and recovery tests in `test_approval_store.py` | Pass macOS/Linux |
+| S4 SQLite lifecycle | Atomic single consumption and safe restart behavior | 32-worker race and recovery tests in `test_approval_store.py` | Pass across hosted matrix |
 | S5 UI packaging | Static UI resources survive wheel build and clean install | Hatchling wheel installed in a fresh environment | Pass |
 | S6 redaction/replay value | Secrets removed before SQLite; structure remains usable | `test_redaction.py` and canonical fixtures | Pass |
 
@@ -99,6 +99,13 @@ Redaction-before-persistence works, but a replay cannot evaluate secret-dependen
 
 Workflow: `.github/workflows/phase1-spikes.yml`
 
+Passing run: [GitHub Actions run 31460643042](https://github.com/sunhao123456sun-svg/toolpermit/actions/runs/31460643042)
+
+- Commit: `12e8f578fff43d02ec90f4cabb7912140c4a9dfd`.
+- Ubuntu job: passed in 35 seconds.
+- macOS job: passed in 39 seconds.
+- Windows job: passed in 1 minute 14 seconds.
+
 Required passing jobs:
 
 - Ubuntu latest / Python 3.12.
@@ -121,6 +128,6 @@ The six required Phase 1 ADRs are written and accepted for v0.1 design:
 
 ## Exit decision
 
-**Current decision: Do not enter Phase 2 yet.**
+**Current decision: Phase 1 passed; enter Phase 2.**
 
-Phase 1 becomes `Passed` only when the hosted three-OS workflow is observed passing. If Windows fails, correct the subprocess/stdio implementation or revise supported behavior; do not waive the failure.
+All required hosted jobs and all six architecture decision records passed the gate. No Phase 1 exception or waiver is open.
