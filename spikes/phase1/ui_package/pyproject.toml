@@ -1,0 +1,11 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "toolpermit-ui-packaging-spike"
+version = "0.0.0"
+requires-python = ">=3.11"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/toolpermit_ui_spike"]

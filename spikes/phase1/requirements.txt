@@ -1,0 +1,6 @@
+mcp==2.0.0
+pytest>=8.3,<9
+pytest-asyncio>=0.25,<1
+hypothesis>=6.130,<7
+ruff==0.16.2
+uv==0.12.3
