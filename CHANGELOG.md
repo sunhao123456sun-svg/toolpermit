@@ -5,11 +5,16 @@ Semantic Versioning while the project remains pre-1.0.
 
 ## [Unreleased]
 
+### Added
+
+- Installable ToolPermit Codex Skill and skills-only Plugin with a Git marketplace, observe-first
+  workflow, read-only environment doctor, and repo-local discovery.
+
 ### Changed
 
-- Documentation and release automation are being prepared for the first public release.
+- Installation documentation now points to the published PyPI and GitHub v0.1.0 artifacts.
 
-## [0.1.0] - Unreleased
+## [0.1.0] - 2026-08-11
 
 ### Added
 

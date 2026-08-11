@@ -3,13 +3,13 @@
 This walkthrough uses no API key and writes only to a disposable directory you choose. It covers
 observe, inspect, suggest, replay, enforce, approve, export, and delete.
 
-## 1. Install from a checkout
+## 1. Install the release in a checkout
 
 ToolPermit requires Python 3.11–3.13.
 
 ```bash
 python -m venv .venv
-.venv/bin/python -m pip install -e .
+.venv/bin/python -m pip install "toolpermit==0.1.0"
 .venv/bin/toolpermit --version
 .venv/bin/toolpermit init
 ```

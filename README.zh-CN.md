@@ -4,7 +4,8 @@ ToolPermit 是一个面向 MCP 工具调用的本地优先权限策略、一次�
 MCP Client 与本地 `stdio` Server 之间，可以观察工具调用、执行可解释的
 `allow / ask / deny` 规则、审批例外操作，并使用历史记录离线比较候选策略。
 
-> 发布状态：v0.1.0 候选版本，尚未发布到 PyPI。正式发布前请从已检出的源码提交安装。
+> 当前版本：[PyPI v0.1.0](https://pypi.org/project/toolpermit/0.1.0/)，并提供内容匹配的
+> [GitHub Release](https://github.com/sunhao123456sun-svg/toolpermit/releases/tag/v0.1.0)。
 
 英文 [README.md](README.md) 和英文参考文档是项目契约的权威版本；本文件提供中文功能说明与
 快速上手。
@@ -21,13 +22,32 @@ MCP Client 与本地 `stdio` Server 之间，可以观察工具调用、执行�
 
 ![使用虚构演示数据的 ToolPermit 本地审批页面](docs/assets/toolpermit-ui.jpg)
 
+## Codex Skill
+
+可以直接从本 GitHub 仓库安装 ToolPermit Codex Skill：
+
+```bash
+codex plugin marketplace add sunhao123456sun-svg/toolpermit --ref main
+codex plugin add toolpermit@toolpermit
+```
+
+安装后新建一个 Codex 任务，然后输入：
+
+```text
+使用 $toolpermit 安装 ToolPermit，并用观察模式安全包装我的本地 MCP stdio Server。
+```
+
+Skill 会检查 Python 和 ToolPermit，在获得允许后安装依赖，保留已有文件，并在写入
+MCP Client 配置前展示变更。它默认先使用 `observe`，不会自动切换到 `enforce`，也不会
+代替用户审批调用。完整安装、更新和删除方法见英文 [Codex Skill 指南](docs/codex-skill.md)。
+
 ## 十分钟快速上手
 
-需要 Python 3.11–3.13 和项目源码：
+需要 Python 3.11–3.13；运行仓库自带的受控演示时还需要项目源码：
 
 ```bash
 python -m venv .venv
-.venv/bin/python -m pip install -e .
+.venv/bin/python -m pip install "toolpermit==0.1.0"
 .venv/bin/toolpermit init
 ```
 
@@ -75,8 +95,9 @@ v0.1 只承诺本机单用户、MCP `stdio`、策略 schema v1 和审计 schema 
 
 ```bash
 .venv/bin/python -m pip install -e ".[dev]"
-.venv/bin/ruff check src tests examples scripts benchmarks
+.venv/bin/ruff check src tests examples scripts benchmarks plugins
 .venv/bin/pyright
+.venv/bin/python scripts/check_codex_plugin.py
 .venv/bin/pytest --cov=toolpermit --cov-fail-under=70
 ```
 

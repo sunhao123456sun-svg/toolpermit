@@ -1,0 +1,28 @@
+{
+  "name": "toolpermit",
+  "version": "0.1.0",
+  "description": "Configure local MCP tool-call policy, approval, replay, and redacted audit workflows.",
+  "author": {
+    "name": "ToolPermit contributors",
+    "url": "https://github.com/sunhao123456sun-svg"
+  },
+  "homepage": "https://github.com/sunhao123456sun-svg/toolpermit/blob/main/docs/codex-skill.md",
+  "repository": "https://github.com/sunhao123456sun-svg/toolpermit",
+  "license": "Apache-2.0",
+  "keywords": ["codex", "mcp", "permissions", "policy", "security"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "ToolPermit",
+    "shortDescription": "Guard local MCP tool calls with reviewable policy.",
+    "longDescription": "Install and configure ToolPermit around local MCP stdio servers, start in observe mode, derive and replay policies from redacted evidence, and move to explicit one-time approvals only after review.",
+    "developerName": "ToolPermit contributors",
+    "category": "Developer Tools",
+    "capabilities": ["Local MCP policy", "One-time approvals", "Redacted audit"],
+    "websiteURL": "https://github.com/sunhao123456sun-svg/toolpermit",
+    "defaultPrompt": [
+      "Install ToolPermit and safely wrap my local MCP stdio server.",
+      "Review my ToolPermit policy and replay it against recorded calls.",
+      "Diagnose why my ToolPermit-wrapped MCP server will not start."
+    ]
+  }
+}
