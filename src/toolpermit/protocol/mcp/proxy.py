@@ -164,6 +164,7 @@ class MCPProxy:
     pending_approval_ids: dict[str | int, str] = field(default_factory=_approval_id_map)
     executions: dict[str | int, _Execution] = field(default_factory=_execution_map)
     list_requests: set[str | int] = field(default_factory=_request_set)
+    cancelled_requests: set[str | int] = field(default_factory=_request_set)
     catalog: dict[str, str] = field(default_factory=_catalog_map)
 
     async def write_upstream(self, line: bytes) -> None:
@@ -309,6 +310,11 @@ class MCPProxy:
         lifecycle = "observed" if self.config.mode == "observe" else "decided"
         await asyncio.to_thread(self.store.record_event, call, result, lifecycle=lifecycle)
 
+        if request_id in self.cancelled_requests:
+            await asyncio.to_thread(self.store.update_lifecycle, call.event_id, "cancelled")
+            self._finish_pending(request_id)
+            return
+
         if result.decision is Decision.DENY:
             await asyncio.to_thread(self.store.update_lifecycle, call.event_id, "denied")
             await self.write_client(
@@ -317,9 +323,13 @@ class MCPProxy:
             self.pending.pop(request_id, None)
             return
         if result.decision is Decision.ALLOW:
-            self.pending.pop(request_id, None)
-            self.executions[request_id] = _Execution(call.event_id, time.monotonic(), None)
             await asyncio.to_thread(self.store.update_lifecycle, call.event_id, "executing")
+            if request_id in self.cancelled_requests:
+                await asyncio.to_thread(self.store.update_lifecycle, call.event_id, "cancelled")
+                self._finish_pending(request_id)
+                return
+            self._finish_pending(request_id)
+            self.executions[request_id] = _Execution(call.event_id, time.monotonic(), None)
             await self.write_upstream(line)
             return
 
@@ -333,6 +343,11 @@ class MCPProxy:
         )
         self.pending_approval_ids[request_id] = approval.id
         await asyncio.to_thread(self.store.update_lifecycle, call.event_id, "pending")
+        if request_id in self.cancelled_requests:
+            await asyncio.to_thread(self.approvals.cancel, approval.id)
+            await asyncio.to_thread(self.store.update_lifecycle, call.event_id, "cancelled")
+            self._finish_pending(request_id)
+            return
         await self._wait_for_approval(request_id, call, line, approval.id, approval.request_digest)
 
     async def _wait_for_approval(
@@ -345,6 +360,12 @@ class MCPProxy:
     ) -> None:
         try:
             while True:
+                if request_id in self.cancelled_requests:
+                    await asyncio.to_thread(self.approvals.cancel, approval_id)
+                    await asyncio.to_thread(
+                        self.store.update_lifecycle, call.event_id, "cancelled"
+                    )
+                    return
                 record = await asyncio.to_thread(self.approvals.get, approval_id)
                 if record.state is ApprovalState.APPROVED:
                     consumed = await asyncio.to_thread(
@@ -382,23 +403,29 @@ class MCPProxy:
         except asyncio.CancelledError:
             await asyncio.to_thread(self.approvals.cancel, approval_id)
             await asyncio.to_thread(self.store.update_lifecycle, call.event_id, "cancelled")
-            await self.write_client(_response(request_id, -32800, "Cancelled before execution"))
             raise
         finally:
-            self.pending.pop(request_id, None)
-            self.pending_approval_ids.pop(request_id, None)
+            self._finish_pending(request_id)
 
     async def _handle_cancellation(self, message: dict[str, object], line: bytes) -> None:
         request_id = _cancelled_id(message)
         task = self.pending.get(request_id) if request_id is not None else None
         if request_id is not None and task is not None and not task.done():
             approval_id = self.pending_approval_ids.get(request_id)
-            if approval_id is None or await asyncio.to_thread(
+            if approval_id is not None and not await asyncio.to_thread(
                 self.approvals.cancel, approval_id
             ):
-                task.cancel()
+                await self.write_upstream(line)
                 return
+            self.cancelled_requests.add(request_id)
+            await self.write_client(_response(request_id, -32800, "Cancelled before execution"))
+            return
         await self.write_upstream(line)
+
+    def _finish_pending(self, request_id: str | int) -> None:
+        self.pending.pop(request_id, None)
+        self.pending_approval_ids.pop(request_id, None)
+        self.cancelled_requests.discard(request_id)
 
     def _make_call(self, request_id: str | int, message: dict[str, object]) -> ToolCall:
         params = message.get("params")

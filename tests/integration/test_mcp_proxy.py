@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import json
 import os
+import sqlite3
 import sys
 import time
 from pathlib import Path
@@ -182,12 +184,20 @@ async def test_cancellation_while_waiting_never_forwards(tmp_path: Path) -> None
     }
     process.stdin.write((json.dumps(request) + "\n").encode())
     await process.stdin.drain()
-    await asyncio.sleep(0.15)
+    service = ApprovalService(AuditStore(database))
+    deadline = time.monotonic() + 5
+    pending = ()
+    while time.monotonic() < deadline and not pending:
+        with contextlib.suppress(sqlite3.OperationalError):
+            pending = await asyncio.to_thread(service.list_pending)
+        await asyncio.sleep(0.05)
+    assert len(pending) == 1
     process.stdin.write((json.dumps(cancellation) + "\n").encode())
     await process.stdin.drain()
-    response = json.loads(await asyncio.wait_for(process.stdout.readline(), timeout=2))
+    response = json.loads(await asyncio.wait_for(process.stdout.readline(), timeout=5))
     assert response["error"]["code"] == -32800
     process.stdin.close()
     await process.stdin.wait_closed()
     assert await asyncio.wait_for(process.wait(), timeout=5) == 0
     assert not upstream_log.exists()
+    assert service.get(pending[0].id).state is ApprovalState.CANCELLED
