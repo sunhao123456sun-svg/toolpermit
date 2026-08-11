@@ -50,6 +50,9 @@ def test_init_refuses_overwrite_and_config_rejects_unknown_keys(tmp_path: Path) 
     assert result.exit_code == 0
     assert config.exists()
     assert (tmp_path / "toolpermit.yaml").exists()
+    shown = runner.invoke(app, ["config", "show", "--config", str(config), "--json"])
+    assert shown.exit_code == 0
+    assert json.loads(shown.stdout)["policy"] == str(tmp_path / "toolpermit.yaml")
 
     refused = runner.invoke(app, ["init", "--config", str(config)])
     assert refused.exit_code == 4
@@ -117,6 +120,42 @@ def test_cli_approval_runs_export_suggest_and_replay(tmp_path: Path) -> None:
     replay_payload = json.loads(replayed.stdout)
     assert replay_payload["schema_version"] == 1
     assert replay_payload["items"][0]["event_id"] == "event-cli"
+
+    baseline = tmp_path / "baseline.yaml"
+    baseline.write_text("version: 1\ndefault: ask\n", encoding="utf-8")
+    regression = runner.invoke(
+        app,
+        [
+            "replay",
+            "--policy",
+            str(candidate),
+            "--baseline",
+            str(baseline),
+            "--database",
+            str(database),
+            "--fail-on-change",
+        ],
+    )
+    assert regression.exit_code == 5
+    assert "newly_allowed" in regression.stdout
+
+    shown = runner.invoke(app, ["runs", "show", "run-cli", "--database", str(database)])
+    assert shown.exit_code == 0
+    assert "event-cli  echo  ask" in shown.stdout
+
+    unconfirmed = runner.invoke(
+        app, ["audit", "delete", "run-cli", "--database", str(database)]
+    )
+    assert unconfirmed.exit_code == 4
+    deleted = runner.invoke(
+        app, ["audit", "delete", "run-cli", "--database", str(database), "--yes"]
+    )
+    assert deleted.exit_code == 0
+    assert "cannot be recovered" in deleted.stdout
+    missing = runner.invoke(
+        app, ["audit", "delete", "run-cli", "--database", str(database), "--yes"]
+    )
+    assert missing.exit_code == 4
 
 
 def test_enforce_wrap_fails_closed_before_spawning_for_missing_policy(tmp_path: Path) -> None:

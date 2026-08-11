@@ -113,8 +113,24 @@ def test_ui_uses_escaped_dom_and_accessible_controls(tmp_path: Path) -> None:
     html = client.get("/").text
     script = client.get("/app.js").text
     payload = client.get("/api/approvals").json()
+    runs = client.get("/api/runs").json()
+    matching = client.get(
+        "/api/runs/run-web",
+        params={
+            "decision": "ask",
+            "tool": hostile_name,
+            "session": "connection-web",
+            "rule": "$default",
+        },
+    ).json()
+    not_matching = client.get(
+        "/api/runs/run-web", params={"decision": "deny"}
+    ).json()
     assert hostile_name not in html
     assert payload["approvals"][0]["event"]["tool_name"] == hostile_name
+    assert runs["runs"][0]["id"] == "run-web"
+    assert matching["events"][0]["tool_name"] == hostile_name
+    assert not_matching["events"] == []
     assert "textContent" in script
     assert "innerHTML" not in script
     assert "eval(" not in script

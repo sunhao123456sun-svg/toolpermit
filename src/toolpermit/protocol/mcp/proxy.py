@@ -488,8 +488,17 @@ async def run_proxy(config: ProxyConfig) -> int:
         for task in tuple(proxy.pending.values()):
             task.cancel()
         if process.returncode is None:
-            process.terminate()
-        await process.wait()
+            try:
+                await asyncio.wait_for(process.wait(), timeout=1.0)
+            except TimeoutError:
+                process.terminate()
+                try:
+                    await asyncio.wait_for(process.wait(), timeout=5.0)
+                except TimeoutError:
+                    process.kill()
+                    await process.wait()
+        else:
+            await process.wait()
         store.finish_run(run_id)
     return int(process.returncode or 0)
 

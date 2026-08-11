@@ -160,6 +160,7 @@ async def test_cancellation_while_waiting_never_forwards(tmp_path: Path) -> None
         sys.executable,
         str(RAW_SERVER),
         str(upstream_log),
+        "0.2",
     ]
     process = await asyncio.create_subprocess_exec(
         *command,
@@ -198,6 +199,8 @@ async def test_cancellation_while_waiting_never_forwards(tmp_path: Path) -> None
     assert response["error"]["code"] == -32800
     process.stdin.close()
     await process.stdin.wait_closed()
-    assert await asyncio.wait_for(process.wait(), timeout=5) == 0
+    return_code = await asyncio.wait_for(process.wait(), timeout=5)
+    stderr = await process.stderr.read() if process.stderr is not None else b""
+    assert return_code == 0, stderr.decode(errors="replace")
     assert not upstream_log.exists()
     assert service.get(pending[0].id).state is ApprovalState.CANCELLED

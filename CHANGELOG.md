@@ -27,5 +27,10 @@ Semantic Versioning while the project remains pre-1.0.
 - Browser endpoints enforce exact Host and Origin checks, per-session CSRF tokens, restrictive CSP,
   SameSite cookies, and no permissive CORS.
 
+### Fixed
+
+- Proxy shutdown now gives an EOF-aware upstream server a bounded graceful-exit window before
+  termination, removing a cross-platform exit-code race after pre-execution cancellation.
+
 [Unreleased]: https://github.com/sunhao123456sun-svg/toolpermit/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/sunhao123456sun-svg/toolpermit/releases/tag/v0.1.0

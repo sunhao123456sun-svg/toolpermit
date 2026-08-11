@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sys
+import time
 from pathlib import Path
 
 
@@ -21,8 +22,10 @@ def main() -> None:
         }
         sys.stdout.write(json.dumps(response, separators=(",", ":")) + "\n")
         sys.stdout.flush()
+    if len(sys.argv) > 2:
+        sys.stdout.close()
+        time.sleep(float(sys.argv[2]))
 
 
 if __name__ == "__main__":
     main()
-
