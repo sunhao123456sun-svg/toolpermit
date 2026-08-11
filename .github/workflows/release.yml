@@ -22,7 +22,9 @@ jobs:
           cache: pip
           cache-dependency-path: pyproject.toml
       - name: Install release tooling
-        run: python -m pip install -e ".[dev]" build "packaging>=26"
+        run: >-
+          python -m pip install -e ".[dev]" build "packaging>=26"
+          "pip-audit>=2.9,<3"
       - name: Validate tag and package version
         shell: python {0}
         run: |
@@ -40,6 +42,7 @@ jobs:
           python -m pyright src
           python scripts/check_release.py
           python -m pytest --cov=toolpermit --cov-fail-under=70 -q
+          python -m pip_audit --local --skip-editable
       - name: Build once
         run: python -m build
       - name: Check distributions
@@ -71,7 +74,11 @@ jobs:
           subject-path: "dist/*"
       - name: Publish to PyPI with Trusted Publishing
         uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # release/v1
+      - name: Create checksums
+        run: sha256sum dist/* > SHA256SUMS
       - name: Create GitHub release from the same files
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" dist/* --verify-tag --generate-notes
+        run: >-
+          gh release create "$GITHUB_REF_NAME" dist/* SHA256SUMS
+          --verify-tag --generate-notes
