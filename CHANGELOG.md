@@ -5,6 +5,8 @@ Semantic Versioning while the project remains pre-1.0.
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-08-11
+
 ### Added
 
 - Installable ToolPermit Codex Skill and skills-only Plugin with a Git marketplace, observe-first
@@ -12,7 +14,24 @@ Semantic Versioning while the project remains pre-1.0.
 
 ### Changed
 
-- Installation documentation now points to the published PyPI and GitHub v0.1.0 artifacts.
+- Installation documentation now points to the published PyPI and GitHub v0.1.1 artifacts and
+  documents immutable, tag-pinned Codex Plugin installation.
+- GitHub Actions dependencies were updated to their current reviewed major releases.
+
+### Fixed
+
+- GitHub Release creation now resolves the repository explicitly after publishing the same reviewed
+  distributions to PyPI.
+- Clean-environment installation instructions now upgrade pip before resolving modern dependency
+  metadata.
+- The supported-version policy now reflects the published `0.1.x` release line.
+
+### Security
+
+- CodeQL now scans Python, JavaScript/TypeScript, and GitHub Actions and is required by branch
+  protection.
+- Dependabot alerts and security updates, secret scanning with push protection, and private
+  vulnerability reporting are enabled for the public repository.
 
 ## [0.1.0] - 2026-08-11
 
@@ -37,5 +56,6 @@ Semantic Versioning while the project remains pre-1.0.
 - Proxy shutdown now gives an EOF-aware upstream server a bounded graceful-exit window before
   termination, removing a cross-platform exit-code race after pre-execution cancellation.
 
-[Unreleased]: https://github.com/sunhao123456sun-svg/toolpermit/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/sunhao123456sun-svg/toolpermit/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/sunhao123456sun-svg/toolpermit/releases/tag/v0.1.1
 [0.1.0]: https://github.com/sunhao123456sun-svg/toolpermit/releases/tag/v0.1.0

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "toolpermit"
-version = "0.1.0"
+version = "0.1.1"
 description = "Local-first permission policies, approvals, and redacted audit for MCP tool calls"
 readme = "README.md"
 requires-python = ">=3.11"

@@ -18,7 +18,8 @@ Trusted Publishing uses short-lived OIDC credentials; no long-lived PyPI token b
 
 ## Release candidate gate
 
-- Update version in `pyproject.toml` and `src/toolpermit/__init__.py` together.
+- Update version in `pyproject.toml`, `src/toolpermit/__init__.py`, and the Codex Plugin manifest
+  together.
 - Move changelog notes from Unreleased and set the release date.
 - Run `python scripts/check_release.py` and the full local CI commands.
 - Build both distributions and run `python scripts/check_distributions.py dist`; this validator uses
@@ -38,9 +39,9 @@ human approval boundary.
 ## Post-release
 
 Install from PyPI into a new environment, run `toolpermit --version`, complete the contained demo,
-confirm the GitHub/PyPI metadata and attestations, and record any follow-up issue. Never overwrite a
-published version. Yank only when leaving the file available would cause material harm, and publish
-a corrected version promptly.
+confirm the GitHub/PyPI metadata and attestations, install the Codex Plugin from the immutable
+release tag, and record any follow-up issue. Never overwrite a published version. Yank only when
+leaving the file available would cause material harm, and publish a corrected version promptly.
 
 The expanded checklist and incident procedure are in
 [planning/RELEASE_PLAN.md](../planning/RELEASE_PLAN.md).

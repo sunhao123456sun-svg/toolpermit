@@ -4,8 +4,8 @@ ToolPermit 是一个面向 MCP 工具调用的本地优先权限策略、一次�
 MCP Client 与本地 `stdio` Server 之间，可以观察工具调用、执行可解释的
 `allow / ask / deny` 规则、审批例外操作，并使用历史记录离线比较候选策略。
 
-> 当前版本：[PyPI v0.1.0](https://pypi.org/project/toolpermit/0.1.0/)，并提供内容匹配的
-> [GitHub Release](https://github.com/sunhao123456sun-svg/toolpermit/releases/tag/v0.1.0)。
+> 当前版本：[PyPI v0.1.1](https://pypi.org/project/toolpermit/0.1.1/)，并提供内容匹配的
+> [GitHub Release](https://github.com/sunhao123456sun-svg/toolpermit/releases/tag/v0.1.1)。
 
 英文 [README.md](README.md) 和英文参考文档是项目契约的权威版本；本文件提供中文功能说明与
 快速上手。
@@ -31,6 +31,8 @@ codex plugin marketplace add sunhao123456sun-svg/toolpermit --ref main
 codex plugin add toolpermit@toolpermit
 ```
 
+如需可复现地固定安装本次发布，请在第一条命令中把 `main` 替换为 `v0.1.1`。
+
 安装后新建一个 Codex 任务，然后输入：
 
 ```text
@@ -47,7 +49,8 @@ MCP Client 配置前展示变更。它默认先使用 `observe`，不会自动�
 
 ```bash
 python -m venv .venv
-.venv/bin/python -m pip install "toolpermit==0.1.0"
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install "toolpermit==0.1.1"
 .venv/bin/toolpermit init
 ```
 

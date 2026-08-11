@@ -2,9 +2,8 @@
 
 ## Supported versions
 
-Before the first public release, only the current `main` branch receives security fixes. After
-v0.1.0, the latest released minor line is supported. Pre-1.0 compatibility may change, but security
-fixes and required migration steps will be documented.
+The latest published `0.1.x` release and the current `main` branch receive security fixes. Pre-1.0
+compatibility may change, but security fixes and required migration steps will be documented.
 
 ## Report a vulnerability
 
