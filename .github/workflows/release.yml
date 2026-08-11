@@ -81,4 +81,4 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: >-
           gh release create "$GITHUB_REF_NAME" dist/* SHA256SUMS
-          --verify-tag --generate-notes
+          --repo "$GITHUB_REPOSITORY" --verify-tag --generate-notes
