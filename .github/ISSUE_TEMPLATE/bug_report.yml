@@ -1,0 +1,55 @@
+name: Bug report
+description: Report a reproducible defect without sensitive data.
+title: "bug: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Do not include credentials or unredacted audit databases. Report vulnerabilities privately.
+  - type: input
+    id: version
+    attributes:
+      label: ToolPermit version or commit
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Python version and operating system
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Mode
+      options: [observe, enforce, replay, CLI/UI only, other]
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal safe reproduction
+      description: Include redacted configuration, commands, and inputs.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I removed real credentials, personal data, and unredacted audit content.
+          required: true
+        - label: This is not a private vulnerability report.
+          required: true

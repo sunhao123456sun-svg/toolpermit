@@ -1,0 +1,43 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  background: #f3f0e9;
+  color: #18221d;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; }
+header, main { width: min(72rem, calc(100% - 2rem)); margin-inline: auto; }
+header { padding: 4rem 0 2rem; border-bottom: 1px solid #a7b1a9; }
+h1 { margin: .15rem 0; font: 700 clamp(3rem, 9vw, 7rem)/.9 Georgia, serif; }
+h2 { font: 700 2rem/1.1 Georgia, serif; }
+.eyebrow, .state { letter-spacing: .12em; font-size: .75rem; font-weight: 800; }
+main { padding: 1rem 0 5rem; }
+section { margin-top: 2.5rem; }
+.section-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 1rem; }
+.filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: .75rem; margin-bottom: 1rem; align-items: end; }
+.filters label { display: grid; gap: .35rem; font-weight: 700; }
+input, select { min-width: 0; border: 1px solid #59655e; background: #fff; padding: .65rem; font: inherit; }
+.card { padding: 1.25rem; border: 1px solid #7b877f; background: #fffdf8; box-shadow: 4px 4px 0 #283f34; overflow-wrap: anywhere; }
+.card.pending { border-left: .5rem solid #b75a22; }
+.tool, .run { margin: .3rem 0 1rem; }
+.detail { display: grid; grid-template-columns: 7rem 1fr; gap: .75rem; padding: .5rem 0; border-top: 1px solid #d8d8ce; }
+.detail-label { font-weight: 700; }
+.detail-value { margin: 0; white-space: pre-wrap; }
+.actions { display: flex; gap: .75rem; margin-top: 1rem; }
+button { border: 2px solid #18221d; padding: .65rem 1rem; background: #fff; color: #18221d; font: inherit; font-weight: 750; cursor: pointer; }
+button.approve { background: #c9f57a; }
+button.reject { background: #ffd5c2; }
+button:hover { transform: translate(-1px, -1px); box-shadow: 2px 2px 0 #18221d; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 4px solid #225cdf; outline-offset: 3px; }
+.skip-link { position: fixed; left: 1rem; top: -5rem; background: white; padding: 1rem; z-index: 2; }
+.skip-link:focus { top: 1rem; }
+.empty { padding: 1rem; border: 1px dashed #7b877f; }
+.command, .timestamp { color: #47534c; }
+
+@media (max-width: 36rem) {
+  header { padding-top: 2.5rem; }
+  .section-heading { align-items: flex-start; flex-direction: column; }
+  .detail { grid-template-columns: 1fr; gap: .2rem; }
+}
