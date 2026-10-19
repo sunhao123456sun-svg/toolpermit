@@ -1,4 +1,4 @@
-mcp==2.0.0
+mcp==2.2.0
 pytest>=8.3,<9
 pytest-asyncio>=0.25,<1
 hypothesis>=6.130,<7
